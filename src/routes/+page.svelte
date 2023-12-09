@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import PostCard from '../PostCard.svelte';
-	export let data;
+	import type { PageData } from './$types';
+	export let data: PageData;
+	$: ({ posts } = data);
 	let value: string = '';
 	const placeholders = [
 		'PA school ...',
@@ -20,6 +22,12 @@
 			currentIndex = (currentIndex + 1) % placeholders.length;
 			currentPlaceholder = placeholders[currentIndex];
 		}, 4000);
+	}
+
+	async function getPosts() {
+		const response = await fetch('/posts');
+		const posts = await response.json();
+		return posts.posts;
 	}
 
 	onMount(() => {
@@ -45,17 +53,27 @@
 		/>
 		<div class="space-y-4 text-start flex flex-col items-start">
 			<h3 class="h3 space-y-4 underline">Read my posts below:</h3>
-			{#if data}
-				{#each data.posts.documents as post}
-					<PostCard
-						title={post.value.title}
-						content={post.value.content}
-						author={post.value.author}
-						createdAt={post.value.createdAt}
-						topics={post.value.topics}
-					/>
+			<!-- {#await getPosts()}
+				Loading posts...
+			{:then posts} -->
+			{#each posts as { id, title, body, userId, tags }}
+				<PostCard
+					slug={`/posts/${id}`}
+					{title}
+					content={body}
+					author={userId}
+					createdAt="now"
+					topics={tags}
+				/>
+			{/each}
+			<!-- {:catch error}
+				<p>{error.message}</p>
+			{/await} -->
+			<!-- {#if data}
+				{#each data.posts as post}
+					<PostCard title={post.title} body={post.body} userId={post.userId} />
 				{/each}
-			{/if}
+			{/if} -->
 		</div>
 	</div>
 </div>

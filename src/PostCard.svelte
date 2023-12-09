@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton';
-	export let title: any;
+	export let slug: string;
+	export let title: string;
 	export let content: any;
 	export let author: any;
 	export let createdAt: any;
 	export let topics: any;
 </script>
 
-<a href="/" class="card p-4 w-full">
+<a href={slug} class="card p-4 w-full">
 	<!-- <header>
 		<img
 			src={'https://images.unsplash.com/photo-1620562303747-ba21ca6f1530?ixid=M3w0Njc5ODF8MHwxfGFsbHx8fHx8fHx8fDE2ODc5NzY2MjR8&ixlib=rb-4.0.3&w=400&h=100&auto=format&fit=crop'}

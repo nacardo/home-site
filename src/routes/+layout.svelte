@@ -15,8 +15,10 @@
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">Paige's Place 😋 </strong></svelte:fragment
-			>
+				<a href="/">
+					<strong class="text-xl uppercase">Paige's Place 😋 </strong>
+				</a>
+			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<LightSwitch />
 				<a class="btn btn-sm variant-ghost-surface" href="/travel" rel="noreferrer"> Travel </a>
