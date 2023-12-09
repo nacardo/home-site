@@ -1,7 +1,13 @@
 import type { PageServerLoad } from './$types';
+import client from '$lib/redis';
 
-export const load = (async ({ params, fetch }) => {
-	const response = await fetch(`https://dummyjson.com/posts/${params.slug}`);
-	const post = await response.json();
+export const load: PageServerLoad = async ({ params }) => {
+	// const response = await fetch('/posts');
+	// const posts = await response.json();
+	// return posts;
+	client.connect();
+	const post = await client.json.get(params.slug);
+	// client.disconnect();
+	await client.quit();
 	return post;
-}) satisfies PageServerLoad;
+};

@@ -1,8 +1,14 @@
-import type { PageLoad } from './$types';
-export const load: PageLoad = async ({ fetch }) => {
-	const response = await fetch('/posts');
-	const posts = await response.json();
-	return posts;
+import type { PageServerLoad } from './$types';
+import client from '$lib/redis';
+export const load: PageServerLoad = async () => {
+	// const response = await fetch('/posts');
+	// const posts = await response.json();
+	// return posts;
+	client.connect();
+	const response = await client.ft.search('idx:posts', '*');
+	const posts = response.documents;
+	client.disconnect();
+	return { posts };
 };
 // import client from "$lib/redis";
 

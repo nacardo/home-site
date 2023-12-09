@@ -10,4 +10,4 @@ const client = createClient({
 	}
 });
 
-export default client.connect();
+export default client;

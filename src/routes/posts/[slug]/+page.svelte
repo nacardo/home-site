@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-	export let data: PageData;
+	import type { PageServerData } from './$types';
+	export let data: PageServerData;
 </script>
 
 <div class="container h-full mt-20 mx-auto flex justify-center">
@@ -9,9 +9,9 @@
 			Post not found.
 		{:else}
 			<h2 class="h2">{data.title}</h2>
-			<h3 class="h3">Author: {data.userId}</h3>
+			<h3 class="h3">Author: {data.author}</h3>
 
-			<div>{@html data.body}</div>
+			<div>{@html data.content}</div>
 		{/if}
 	</div>
 </div>

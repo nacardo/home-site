@@ -3,7 +3,7 @@
 	import PostCard from '../PostCard.svelte';
 	import type { PageData } from './$types';
 	export let data: PageData;
-	$: ({ posts } = data);
+	// $: ({ posts } = data);
 	let value: string = '';
 	const placeholders = [
 		'PA school ...',
@@ -51,19 +51,19 @@
 			placeholder={currentPlaceholder}
 			bind:value
 		/>
-		<div class="space-y-4 text-start flex flex-col items-start">
+		<div class="space-y-4 text-start flex flex-col items-start w-full md:w-3/4 lg:w-1/2">
 			<h3 class="h3 space-y-4 underline">Read my posts below:</h3>
 			<!-- {#await getPosts()}
 				Loading posts...
 			{:then posts} -->
-			{#each posts as { id, title, body, userId, tags }}
+			{#each data.posts as { id, value: { title, content, author, topics } }}
 				<PostCard
 					slug={`/posts/${id}`}
 					{title}
-					content={body}
-					author={userId}
+					{content}
+					author={author[0]}
 					createdAt="now"
-					topics={tags}
+					topics={topics[0]}
 				/>
 			{/each}
 			<!-- {:catch error}
