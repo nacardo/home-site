@@ -3,7 +3,6 @@
 	import PostCard from '../PostCard.svelte';
 	import type { PageData } from './$types';
 	export let data: PageData;
-	// $: ({ posts } = data);
 	let value: string = '';
 	const placeholders = [
 		'PA school ...',
@@ -24,18 +23,10 @@
 		}, 4000);
 	}
 
-	async function getPosts() {
-		const response = await fetch('/posts');
-		const posts = await response.json();
-		return posts.posts;
-	}
-
 	onMount(() => {
 		iteratePlaceholders();
 	});
 </script>
-
-<!-- YOU CAN DELETE EVERYTHING IN THIS PAGE -->
 
 <div class="container h-full mx-auto flex justify-center items-center">
 	<div class="space-y-10 text-center flex flex-col items-center">
@@ -53,27 +44,17 @@
 		/>
 		<div class="space-y-4 text-start flex flex-col items-start w-full md:w-3/4 lg:w-1/2">
 			<h3 class="h3 space-y-4 underline">Read my posts below:</h3>
-			<!-- {#await getPosts()}
-				Loading posts...
-			{:then posts} -->
-			{#each data.posts as { id, value: { title, content, author, topics } }}
+			<p>Showing {data.posts.length} posts.</p>
+			{#each data.posts as post}
 				<PostCard
-					slug={`/posts/${id}`}
-					{title}
-					{content}
-					author={author[0]}
-					createdAt="now"
-					topics={topics[0]}
+					slug={`/posts/${post.id}`}
+					title={post.title}
+					content={post.content}
+					author={post.authorId}
+					createdAt={post.createdAt}
+					topics={'null'}
 				/>
 			{/each}
-			<!-- {:catch error}
-				<p>{error.message}</p>
-			{/await} -->
-			<!-- {#if data}
-				{#each data.posts as post}
-					<PostCard title={post.title} body={post.body} userId={post.userId} />
-				{/each}
-			{/if} -->
 		</div>
 	</div>
 </div>
