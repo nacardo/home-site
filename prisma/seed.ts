@@ -28,3 +28,15 @@ type Category = {
 	tag: string;
 	posts: Array<Post>;
 };
+
+type Shot = {
+	id: number;
+	name: string;
+	grindAmount: number;
+	preTime: number;
+	extractionTime: number;
+	espressoYield: number;
+	rating: string;
+	yieldRatio: number;
+	yieldRate: number;
+};

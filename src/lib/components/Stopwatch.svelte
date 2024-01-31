@@ -1,10 +1,10 @@
 <script lang="ts">
 	// todo create pre and extraction indicators
 	// todo create progress bar
-	import { onMount, onDestroy } from 'svelte';
-	import type { ModalSettings } from '@skeletonlabs/skeleton';
-
+	import { onDestroy } from 'svelte';
+	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import ModalForm from '$lib/modals/EspressoModalForm.svelte';
 
 	const modalStore = getModalStore();
 
@@ -18,27 +18,49 @@
 	$: totalTime = preTime + extractionTime;
 	// $: idealYield = extractionTime * 1.8;
 	$: showSave = extractionTime > 0 && isBrewed;
+	$: preClass = preTime > 0 ? 'text-warning-500' : 'opacity-50';
+	$: extractionClass = extractionTime > 0 ? 'text-success-500' : 'opacity-10';
 	let coffeeYield: number = 0;
 
 	let interval: NodeJS.Timeout;
 	// $: interval ? console.log(interval) : null;
 
-	const modal: ModalSettings = {
-		type: 'prompt',
-		// Data
-		title: 'Coffee Yield',
-		body: 'Enter the amount of coffee yielded in grams.',
-		// Populates the input value and attributes
-		valueAttr: {
-			placeholder: 'grams',
-			type: 'number',
-			minlength: 1,
-			maxlength: 3,
-			required: true
-		},
-		// Returns the updated response value
-		response: (r: string) => console.log('response:', r)
-	};
+	// const modal: ModalSettings = {
+	// 	type: 'prompt',
+	// 	// Data
+	// 	title: 'Coffee Yield',
+	// 	body: 'Enter the amount of coffee yielded in grams.',
+	// 	// Populates the input value and attributes
+	// 	valueAttr: {
+	// 		placeholder: 'grams',
+	// 		type: 'number',
+	// 		minlength: 1,
+	// 		maxlength: 3,
+	// 		required: true
+	// 	},
+	// 	// Returns the updated response value
+	// 	response: (r: string) => console.log('response:', r)
+	// };
+
+	function modalComponentForm(): void {
+		const c: ModalComponent = {
+			ref: ModalForm,
+			props: {
+				grindAmount: grindAmount,
+				preTime: preTime.toFixed(2),
+				extractionTime: extractionTime.toFixed(2)
+				
+			}
+		};
+		const modal: ModalSettings = {
+			type: 'component',
+			component: c,
+			title: 'Save Shot',
+			body: 'Complete the form below and then press submit.',
+			response: (r) => console.log('response:', r)
+		};
+		modalStore.trigger(modal);
+	}
 
 	function start() {
 		isRunning = true;
@@ -67,7 +89,8 @@
 	}
 
 	function save() {
-		modalStore.trigger(modal);
+		// modalStore.trigger(ModalForm);
+		modalComponentForm();
 		// save the brew details to db
 	}
 
@@ -82,7 +105,7 @@
 	});
 </script>
 
-<div class="stopwatch">
+<div class="container">
 	<div class="grid grid-cols-3">
 		<div class="grid col-span-1 text-start font-mono">
 			<p class="text-3xl md:text-5xl font-semibold">{preTime.toFixed(2)}s</p>
@@ -99,22 +122,35 @@
 					<p>Extraction</p>
 				</div>
 			</button> -->
-			<div class="flex flex-row justify-between mt-2 py-3 rounded-full variant-outline-primary">
-				<p class="flex pl-3">Pre</p>
+			<div class="flex flex-row mt-2 py-3 rounded-full variant-outline-primary text-2xl">
+				<div class="flex flex-row justify-evenly w-full">
+					<!-- <pre>P R E </pre>
+					<pre>- E X T R A C T I O N</pre> -->
+					<p class={preClass}>P</p>
+					<p class={preClass}>R</p>
+					<p class={preClass}>E</p>
+					<p class={extractionClass}>-</p>
+					<p class={extractionClass}>E</p>
+					<p class={extractionClass}>X</p>
+					<p class={extractionClass}>T</p>
+					<p class={extractionClass}>R</p>
+					<p class={extractionClass}>A</p>
+					<p class={extractionClass}>C</p>
+					<p class={extractionClass}>T</p>
+					<p class={extractionClass}>I</p>
+					<p class={extractionClass}>O</p>
+					<p class={extractionClass}>N</p>
+				</div>
+				<!-- <p class="flex pl-3 {preClass}">Pre</p>
 				<p class="flex">→</p>
-				<p class="flex justify-end pr-3">extraction</p>
-				<!-- <input type="text" placeholder="Enter Username..." /> -->
-				<!-- <button class="">Extraction</button> -->
+				<p class="flex justify-end pr-3 {extractionClass}">extraction</p> -->
 			</div>
 		</div>
-		<!-- <span>Street</span> -->
 		<label class="label">
-			<input
-				class="input w-1/2"
-				type="text"
-				placeholder="Grind Amount (g)"
-				bind:value={grindAmount}
-			/>
+			<div class="input-group input-group-divider grid-cols-[1fr_auto] w-1/2">
+				<div class="input-group-shim text-sm">Grind Amount</div>
+				<input type="text" placeholder="g" bind:value={grindAmount} />
+			</div>
 		</label>
 		<!-- <div class="input-group input-group-divider grid-cols-[1fr_auto]">
 				<div class="input-group-shim">Grind Amount</div>
@@ -125,7 +161,7 @@
 				<div class="input-group-shim">Ideal yield/s</div>
 				<div>{idealYield.toFixed(2)}g</div>
 			</div> -->
-		<div class="grid grid-rows-2 grid-cols-6 gap-y-2 gap-x-1 md:gap-y-4 md:gap-x-5">
+		<div class="grid grid-rows-2 grid-cols-6 h-36 gap-y-4 gap-x-1 md:gap-y-4 md:gap-x-5">
 			<button
 				class="btn variant-filled-primary col-span-2"
 				on:click={start}
@@ -157,11 +193,11 @@
 		</ul>
 	{/if} -->
 </div>
-
+<!-- 
 <style>
 	.stopwatch {
 		font-size: 24px;
 		text-align: center;
 		margin: 20px;
 	}
-</style>
+</style> -->

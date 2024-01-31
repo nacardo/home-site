@@ -1,5 +1,8 @@
 import type { PageLoad } from './$types';
+import type { Shot } from '@prisma/client';
+export const load = (async ({ fetch }) => {
+	const response = await fetch('/api/espresso/shots');
 
-export const load = (async () => {
-	return {};
+	const shots: Shot[] = await response.json();
+	return { shots };
 }) satisfies PageLoad;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import PostCard from '../PostCard.svelte';
+	import PostCard from '$lib/components/PostCard.svelte';
 	import type { PageData } from './$types';
 	export let data: PageData;
 	let value: string = '';
