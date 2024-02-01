@@ -16,7 +16,7 @@
 <AppShell>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
-		<AppBar>
+		<AppBar class="mb-5">
 			<svelte:fragment slot="lead">
 				<a href="/">
 					<strong class="text-xl uppercase">Paige's Place 😋 </strong>

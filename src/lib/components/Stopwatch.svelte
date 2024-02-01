@@ -4,7 +4,8 @@
 	import { onDestroy } from 'svelte';
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import ModalForm from '$lib/modals/EspressoModalForm.svelte';
+	import EspressoModalForm from '$lib/modals/EspressoModalForm.svelte';
+	import { page } from '$app/stores';
 
 	const modalStore = getModalStore();
 
@@ -18,38 +19,23 @@
 	$: totalTime = preTime + extractionTime;
 	// $: idealYield = extractionTime * 1.8;
 	$: showSave = extractionTime > 0 && isBrewed;
-	$: preClass = preTime > 0 ? 'text-warning-500' : 'opacity-50';
-	$: extractionClass = extractionTime > 0 ? 'text-success-500' : 'opacity-10';
+	$: stageClass = preTime > 0 ? 'variant-ghost-surface' : 'variant-ringed-surface';
+	$: preClass = preTime > 0 && extractionTime == 0 ? 'text-primary-200' : 'opacity-20';
+	$: extractionClass = extractionTime > 0 ? 'text-primary-200' : 'opacity-20';
 	let coffeeYield: number = 0;
 
 	let interval: NodeJS.Timeout;
-	// $: interval ? console.log(interval) : null;
-
-	// const modal: ModalSettings = {
-	// 	type: 'prompt',
-	// 	// Data
-	// 	title: 'Coffee Yield',
-	// 	body: 'Enter the amount of coffee yielded in grams.',
-	// 	// Populates the input value and attributes
-	// 	valueAttr: {
-	// 		placeholder: 'grams',
-	// 		type: 'number',
-	// 		minlength: 1,
-	// 		maxlength: 3,
-	// 		required: true
-	// 	},
-	// 	// Returns the updated response value
-	// 	response: (r: string) => console.log('response:', r)
-	// };
 
 	function modalComponentForm(): void {
 		const c: ModalComponent = {
-			ref: ModalForm,
+			ref: EspressoModalForm,
 			props: {
+				// brewerName: '',
 				grindAmount: grindAmount,
-				preTime: preTime.toFixed(2),
-				extractionTime: extractionTime.toFixed(2)
-				
+				// espressoYield: '',
+				preTime: preTime,
+				extractionTime: extractionTime,
+				// rating: ''
 			}
 		};
 		const modal: ModalSettings = {
@@ -57,7 +43,15 @@
 			component: c,
 			title: 'Save Shot',
 			body: 'Complete the form below and then press submit.',
-			response: (r) => console.log('response:', r)
+			response: async (r) => {
+				const response = await fetch('/api/espresso/shots', {
+					method: 'POST',
+					body: JSON.stringify(r),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+			}
 		};
 		modalStore.trigger(modal);
 	}
@@ -122,7 +116,7 @@
 					<p>Extraction</p>
 				</div>
 			</button> -->
-			<div class="flex flex-row mt-2 py-3 rounded-full variant-outline-primary text-2xl">
+			<div class="flex flex-row mt-2 py-3 rounded-full {stageClass} text-2xl">
 				<div class="flex flex-row justify-evenly w-full">
 					<!-- <pre>P R E </pre>
 					<pre>- E X T R A C T I O N</pre> -->

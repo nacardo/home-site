@@ -14,3 +14,13 @@ export const GET: RequestHandler = async () => {
 };
 
 // todo add POST method
+export async function POST({ request }) {
+	const shotData = await request.json();
+	const submitShot = await db.shot.create({
+		data: shotData
+	});
+	// const userid = cookies.get('userid');
+	// const { id } = await db.shot.create({ userid, description });
+
+	return json({ submitShot }, { status: 201 });
+}

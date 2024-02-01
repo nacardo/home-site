@@ -40,7 +40,7 @@ model Category {
 
 model Shot {
   id             Int      @id @default(autoincrement())
-  name           String   @default("anonymous")
+  brewerName     String   @default("anonymous")
   grindAmount    Int?
   preTime        Decimal
   extractionTime Decimal
@@ -48,4 +48,5 @@ model Shot {
   rating         String?
   yieldRatio     Decimal?
   yieldRate      Decimal?
+  brewDate       DateTime @default(now())
 }

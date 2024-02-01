@@ -7,24 +7,31 @@
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: SvelteComponent;
+	// export let brewerName;
 	export let grindAmount;
+	// export let espressoYield;
 	export let preTime;
 	export let extractionTime;
+	// export let rating;
 
 	// Form Data
 	const formData = {
-		brewer: '',
-		grindAmount: grindAmount ? grindAmount : 18,
-		espressoYield: '',
-		preTime: preTime,
-		extractionTime: extractionTime,
-		rating: ''
+		brewerName: '',
+		grindAmount: grindAmount ? Number(grindAmount) : 18,
+		espressoYield: 0,
+		preTime: Number(preTime.toFixed(2)),
+		extractionTime: Number(extractionTime.toFixed(2)),
+		rating: '',
+		yieldRatio: 0,
+		yieldRate: 0
 	};
 
 	// We've created a custom submit function to pass the response and close the modal.
-	function onFormSubmit(): void {
+	async function onFormSubmit(): Promise<void> {
+		formData.yieldRatio = formData.espressoYield / formData.grindAmount;
+		formData.yieldRate = formData.espressoYield / formData.extractionTime;
+
 		if ($modalStore[0].response) $modalStore[0].response(formData);
-		console.log($modalStore[0].response);
 		modalStore.close();
 	}
 
@@ -44,7 +51,12 @@
 		<form class="modal-form {cForm}">
 			<label class="label">
 				<span>Name</span>
-				<input class="input" type="text" bind:value={formData.brewer} placeholder="Enter name..." />
+				<input
+					class="input"
+					type="text"
+					bind:value={formData.brewerName}
+					placeholder="Enter name..."
+				/>
 			</label>
 			<label class="label">
 				<span>Grind Amount (g)</span>
